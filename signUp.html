@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- <script  src="index.js"></script> -->
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body class="body">
+ <form action="" id="mainForm" class="mb-3">
+    <h1 style="text-align: center;" class="mb-3">signUp</h1>
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="firstNameInput" placeholder="Firstname">
+        <label for="floatingInput">firstName</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="lastNameInput" placeholder="lastName">
+        <label for="floatingInput">last name</label>
+      </div>
+    <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="emailInput" value="email" placeholder="name@example.com">
+        <label for="floatingInput">Email address</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="PasswordInput" value= "password"placeholder="Password">
+        <label for="floatingPassword">Password</label>
+      </div>
+      <div class="m-3">
+      <button class="btn btn-light" type="submit">Register</button>
+      <a href="./login.html"><button type="button" class="btn btn-secondary me-2" >Log In</button></a>
+    </div>
+    </form>
+         
+
+
+
+
+
+    <script defer type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-analytics.js";
+  import { getDatabase ,set,get, ref} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtZ1I-cHSyvUzcAfTsPap8iXX54PbY9DM",
+    authDomain: "auth-1c494.firebaseapp.com",
+    projectId: "auth-1c494",
+    storageBucket: "auth-1c494.appspot.com",
+    messagingSenderId: "992878689343",
+    appId: "1:992878689343:web:d98254c2d1d695ec3b8c8a",
+    measurementId: "G-WSFT7572YB"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const database = getDatabase();
+  const auth = getAuth();
+
+  let form = document.getElementById('mainForm');
+
+  let register = (e) => {
+    e.preventDefault(); // Prevent the default form submission
+
+    let EmailInput = document.getElementById('emailInput').value;
+    let pwdInput = document.getElementById('PasswordInput').value;
+    let fnameInput = document.getElementById('firstNameInput').value;
+    let lNameInput = document.getElementById('lastNameInput').value;
+
+    createUserWithEmailAndPassword(auth, EmailInput, pwdInput)
+    ///below this code we have store user data in db
+      .then((credentials) => {
+        set(ref(database, 'userAuthList/' + credentials.user.uid), {
+          firstName: fnameInput,
+          lastName: lNameInput,
+          password: pwdInput
+        });
+      })
+      .catch((e) => {
+        console.log("Error:", e);
+        alert(e.message);
+      });
+  };
+
+  form.addEventListener("submit", register);
+
+
+    </script>
+</body>
+</html>
